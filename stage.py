@@ -1,4 +1,4 @@
-class stage:
+class Stage:
 	"""Biểu diễn cho map của màn dưới dạng numpy array, 0 là dead, 1 là co thể đi vào"""
 	def __init__(self, map, goal) -> None:
 		self.map = map

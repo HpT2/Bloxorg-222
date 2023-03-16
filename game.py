@@ -1,4 +1,4 @@
-from stage import stage
+from Stage import Stage
 import numpy as np
 from Block import Block
 import A_star
@@ -9,17 +9,17 @@ with open("stage1.txt") as file:
 	goal = [int(x) for x in file.readline().split(' ')]
 
 
-map = np.loadtxt("stage1.txt",dtype=int,skiprows=2)
-new_stage = stage(map,goal)
+map = np.loadtxt("Stage1.txt",dtype=int,skiprows=2)
+stage = Stage(map,goal)
 
 """do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)"""
 pos1 = [init[1],init[0]] 
 pos2 = [init[3],init[2]]
 block = Block(pos1,pos2)
 
-print('Goal: {}'.format(new_stage.goal))
+print('Goal: {}'.format(stage.goal))
 print("block: [{},{}] [{},{}]".format(block.pos1.y, block.pos1.x, block.pos2.y, block.pos2.x))
-print("Map:\n{}".format(new_stage.map))
+print("Map:\n{}".format(stage.map))
 """Test"""
 block.RIGHT()
 block.UP()
@@ -55,4 +55,4 @@ block.UP()
 block.LEFT()
 block.DOWN()
 block.RIGHT()
-A_star.solve(new_stage,block)
+A_star.solve(stage,block)

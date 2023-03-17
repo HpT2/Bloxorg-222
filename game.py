@@ -13,46 +13,17 @@ map = np.loadtxt("Stage1.txt",dtype=int,skiprows=2)
 stage = Stage(map,goal)
 
 """do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)"""
-pos1 = [init[1],init[0]] 
-pos2 = [init[3],init[2]]
+pos1 = [init[0],init[1]] 
+pos2 = [init[2],init[3]]
 block = Block(pos1,pos2)
+block1 = Block(pos1,pos2)
+
 
 print('Goal: {}'.format(stage.goal))
 print("block: [{},{}] [{},{}]".format(block.pos1.y, block.pos1.x, block.pos2.y, block.pos2.x))
 print("Map:\n{}".format(stage.map))
 """Test"""
-block.RIGHT()
-block.UP()
-block.RIGHT()
-block.RIGHT()
-block.RIGHT()
-block.UP()
-block.LEFT()
-block.DOWN()
-block.RIGHT()
-block.UP()
-block.UP()
-block.RIGHT()
-block.RIGHT()
-block.RIGHT()
-block.DOWN()
-block.LEFT()
-block.DOWN()
-block.RIGHT()	
-block.DOWN()
-block.RIGHT()
-block.UP()
-block.LEFT()
-block.LEFT()
-block.DOWN()
-block.RIGHT()
-block.UP()
-block.UP()
-block.LEFT()
-block.DOWN()
-block.RIGHT()
-block.UP()
-block.LEFT()
-block.DOWN()
-block.RIGHT()
-A_star.solve(stage,block)
+
+path = A_star.solve(stage,block)
+for item in path:
+	print(block.previousMove,end="->")

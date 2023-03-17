@@ -1,4 +1,4 @@
-from Stage import Stage
+from stage import Stage
 import numpy as np
 from Block import Block
 import A_star

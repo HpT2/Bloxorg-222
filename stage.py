@@ -11,4 +11,9 @@ class Stage:
 		except:
 			return True
 		return False
+	
+	def finish(self,block):
+		if [block.pos1.y,block.pos1.x] == self.goal and [block.pos2.y,block.pos2.x]==self.goal:
+			return True
+		return False 
 

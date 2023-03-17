@@ -9,7 +9,7 @@ with open("stage1.txt") as file:
 	goal = [int(x) for x in file.readline().split(' ')]
 
 
-map = np.loadtxt("Stage1.txt",dtype=int,skiprows=2)
+map = np.loadtxt("stage1.txt",dtype=int,skiprows=2)
 stage = Stage(map,goal)
 
 """do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)"""
@@ -24,6 +24,11 @@ print("block: [{},{}] [{},{}]".format(block.pos1.y, block.pos1.x, block.pos2.y, 
 print("Map:\n{}".format(stage.map))
 """Test"""
 
-path = A_star.solve(stage,block)
-for item in path:
-	print(block.previousMove,end="->")
+finish_block = A_star.solve(stage,block)
+last = finish_block
+path = []
+while(last.parent):
+	path = [last.previousMove] + path
+	last = last.parent
+print(len(path))
+print(path)

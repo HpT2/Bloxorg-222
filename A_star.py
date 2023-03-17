@@ -15,13 +15,13 @@ def solve(stage, block):
 	solver = A_star(h_func, g_func)
 
 	if (solver.createNode(block,stage.goal).value == 0):
-		return examine
+		return path
 	move = getMove(block)
 	open = [solver.createNode(x,stage.goal) for x in move]
 	open.sort(key = lambda x: x.value, reverse=True)
 
 	while(len(open) > 0):
-		exam_node = [open.pop()] + exam_node 
+		exam_node = [open.pop(0)] + exam_node 
 
 		x = exam_node.pop(0)
 		value = x.value
@@ -33,9 +33,8 @@ def solve(stage, block):
 		if (x.block in close):
 			continue
 
-		if(value == 0 ):
-			print("done")
-			return path
+		if(stage.finish(x.block)):
+			return x.block
 			break
 
 		#print("Move: {}".format(x.block.previousMove + " Cur: [{},{}][{},{}]".format(x.block.pos1.y,x.block.pos1.x,x.block.pos2.y,x.block.pos2.x)) + " Dead: {}".format(str(stage.GameOver(x.block))))

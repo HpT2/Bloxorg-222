@@ -28,7 +28,7 @@ print("Map:\n{}".format(stage.map))
 
 """Test"""
 start = timeit.default_timer()
-finish_block = A_star.solve(stage,block)
+finish_node = A_star.solve(stage,block)
 stop = timeit.default_timer()
 
 print("A-star take: " + str(round(stop - start, 4)) + " s")
@@ -37,10 +37,10 @@ process = psutil.Process(os.getpid())
 
 print('Memory usage: ' + str(round(process.memory_info().rss / (1024 * 1024), 2)) + " MB")
 
-last = finish_block
+last = finish_node
 path = []
 while(last.parent):
-	path = [last.previousMove] + path
+	path = [last.block.previousMove] + path
 	last = last.parent
 print(len(path))
 print(path)

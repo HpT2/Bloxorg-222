@@ -1,0 +1,1 @@
+def A_star(block): pass

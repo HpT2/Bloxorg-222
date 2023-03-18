@@ -1,49 +1,50 @@
-from stage import Stage
-import numpy as np
 from Block import Block
 import A_star
 import timeit
-import os
-import psutil
+import sys
+import DFS
 
 """input stage 1 là màn 1, stage2 là màn 3, dòng 1 là vị trí khởi đầu, dòng 2 là goal"""
-with open("stage2.txt") as file:
-	init = [int(x) for x in file.readline().split(' ')]
-	goal = [int(x) for x in file.readline().split(' ')]
+def readMap(fileMap):
+    with open(fileMap) as f:
+        MAP_ROW, MAP_COL, xStart, yStart = [int(x) for x in next(f).split()] # read first line
+        sourceMap = []
+        countMapLine = 1
+        for line in f: # read map
+            countMapLine += 1
+            sourceMap.append([int(x) for x in line.split()])
+            if countMapLine > MAP_ROW: break
 
+        # read managedBoard
+        manaBoa = []
+        for line in f: # read manaBoa
+            # 2 2 4 4 4 5
+            manaBoa.append([int(x) for x in line.split()])
 
-map = np.loadtxt("stage2.txt",dtype=int,skiprows=2)
-stage = Stage(map,goal)
+    print("\nYOUR MAP LOOK LIKE THIS:")
+    for item in sourceMap:
+        print(item)
+    print("Start at (",xStart, ",", yStart,")")
+    print("ManaBoa:")
+    for item in manaBoa:
+        print(item)
+    print("======================================")
+    return MAP_ROW, MAP_COL, xStart, yStart, sourceMap, manaBoa
 
-"""do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)"""
-pos1 = [init[0],init[1]] 
-pos2 = [init[2],init[3]]
-block = Block(pos1,pos2)
-block1 = Block(pos1,pos2)
+passState = []
 
+MAP_ROW, MAP_COL, xStart, yStart, sourceMap, ManaBoa \
+                        = readMap('map/map'+sys.argv[1:][0]+'.txt')
 
-print('Goal: {}'.format(stage.goal))
-print("block: [{},{}] [{},{}]".format(block.pos1.y, block.pos1.x, block.pos2.y, block.pos2.x))
-print("Map:\n{}".format(stage.map))
+block = Block(xStart, yStart, "STANDING", None, sourceMap)
 
-"""Test"""
-start = timeit.default_timer()
-finish_node = A_star.solve(stage,block)
-stop = timeit.default_timer()
+if sys.argv[1:][1] == "DFS":
+    print("Solve DFS")  
+    DFS(block)
+    
+elif sys.argv[1:][1] == "A_star":
+    print("Solve A*")
+    A_star(block)
 
-print("A-star take: " + str(round(stop - start, 4)) + " s")
-
-process = psutil.Process(os.getpid())
-
-print('Memory usage: ' + str(round(process.memory_info().rss / (1024 * 1024), 2)) + " MB")
-
-
-
-last = finish_node
-path = []
-while(last.parent):
-	path = [last.block.previousMove] + path
-	#print('[{} {}] [{} {}] {}'.format(last.block.pos1.y,last.block.pos1.x,last.block.pos2.y, last.block.pos2.x,last.block.previousMove))
-	last = last.parent
-print(len(path))
-print(path)
+else:
+    print("Wrong algorithms argument!")

@@ -10,14 +10,15 @@ def solve(stage, block):
 	open = []
 	close = []
 	exam_node = []
-	path = []
 
 	solver = A_star(h_func, g_func)
 
+	root = solver.createNode(block,stage)
 
 	move = getMove(block)
-	open = [solver.createNode(x,stage) for x in move]
+	open = [solver.createNode(x,stage,root) for x in move]
 	open.sort(key = lambda x: x.f, reverse=True)
+
 
 	while(len(open) > 0):
 		x = open.pop()
@@ -29,11 +30,11 @@ def solve(stage, block):
 			continue
 
 		if(stage.finish(x.block)):
+			print("Done")
 			return x
 
 		#print("Move: {}".format(x.block.previousMove + " Cur: [{},{}][{},{}]".format(x.block.pos1.y,x.block.pos1.x,x.block.pos2.y,x.block.pos2.x)) + " Dead: {}".format(str(stage.GameOver(x.block))))
 		close.append(x.block)
-		path.append(x.block)
 
 		move = getMove(x.block)
 		new_nodes = [solver.createNode(y,stage, x) for y in move]
@@ -59,6 +60,11 @@ class Node:
 		self.f = self.h + self.g
 		self.block = block
 		self.parent = parent
+
+	def __eq__(self, __o: object) -> bool:
+		if __o == None:
+			return False
+		return self.parent == __o.parent and self.block == __o.block
 
 class A_star:
 	def __init__(self, h, g) -> None:

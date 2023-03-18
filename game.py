@@ -37,10 +37,13 @@ process = psutil.Process(os.getpid())
 
 print('Memory usage: ' + str(round(process.memory_info().rss / (1024 * 1024), 2)) + " MB")
 
+
+
 last = finish_node
 path = []
 while(last.parent):
 	path = [last.block.previousMove] + path
+	#print('[{} {}] [{} {}] {}'.format(last.block.pos1.y,last.block.pos1.x,last.block.pos2.y, last.block.pos2.x,last.block.previousMove))
 	last = last.parent
 print(len(path))
 print(path)

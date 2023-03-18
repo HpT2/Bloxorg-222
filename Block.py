@@ -1,71 +1,106 @@
+import copy
+
 class Block:
-	"""Đối tượng Block biểu diễn cho khối, có 2 vị trí kề nhau là pos1 và pos2, mỗi vị trí có tọa độ (y,x)"""
-	def __init__(self, pos1, pos2, parent = None, previousMove = None) -> None:
-		self.pos1 = pos(pos1)
-		self.pos2 = pos(pos2)
+	def __init__(self, x, y, rotation, parent, board, x1=None,y1=None):
+		self.x = x
+		self.y = y
+		self.rotation = rotation
 		self.parent = parent
-		self.previousMove = previousMove
-	
+		self.board = copy.deepcopy(board)
+		self.x1 = x1
+		self.y1 = y1
+
 	def UP(self):
-		if self.pos1.x == self.pos2.x:
-			if self.pos1.y == self.pos2.y or self.pos1.y < self.pos2.y:
-				new_pos1_y = self.pos1.y - 1
-				new_pos2_y = self.pos2.y - 2
-			else:
-				new_pos1_y = self.pos1.y - 2
-				new_pos2_y = self.pos2.y - 1
-		else:
-			new_pos1_y = self.pos1.y - 1
-			new_pos2_y = self.pos2.y - 1
-		return Block([new_pos1_y, self.pos1.x], [new_pos2_y, self.pos2.x], self, "UP")
-
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board)
+		if self.rotation == "STANDING":
+			newBlock.y -= 2
+			newBlock.rotation = "LAYING_Y"
+		elif newBlock.rotation == "LAYING_X":
+			newBlock.y -= 1
+		elif newBlock.rotation == "LAYING_Y":
+			newBlock.y -= 1
+			newBlock.rotation = "STANDING"
+		return newBlock
+	
 	def DOWN(self):
-		if self.pos1.x == self.pos2.x:
-			if self.pos1.y == self.pos2.y or self.pos1.y > self.pos2.y:
-				new_pos1_y = self.pos1.y + 1
-				new_pos2_y = self.pos2.y + 2
-			else:
-				new_pos1_y = self.pos1.y + 2
-				new_pos2_y = self.pos2.y + 1
-		else:
-			new_pos1_y = self.pos1.y + 1
-			new_pos2_y = self.pos2.y + 1
-		return Block([new_pos1_y, self.pos1.x], [new_pos2_y, self.pos2.x], self, "DOWN")
-
-	def RIGHT(self):
-		if self.pos1.y == self.pos2.y:
-			if self.pos1.x == self.pos2.x or self.pos1.x > self.pos2.x:
-				new_pos1_x = self.pos1.x + 1
-				new_pos2_x = self.pos2.x + 2
-			else:
-				new_pos1_x = self.pos1.x + 2
-				new_pos2_x = self.pos2.x + 1
-		else:
-			new_pos1_x = self.pos1.x + 1
-			new_pos2_x = self.pos2.x + 1
-		return Block([self.pos1.y, new_pos1_x], [self.pos2.y, new_pos2_x], self, "RIGHT")
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board)
+		if newBlock.rotation == "STANDING":
+			newBlock.y += 1
+			newBlock.rotation = "LAYING_Y"
+		elif newBlock.rotation == "LAYING_X":
+			newBlock.y += 1
+		elif newBlock.rotation == "LAYING_Y":
+			newBlock.y += 2
+			newBlock.rotation = "STANDING"
+		return newBlock
 	
 	def LEFT(self):
-		if self.pos1.y == self.pos2.y:
-			if self.pos1.x == self.pos2.x or self.pos1.x < self.pos2.x:
-				new_pos1_x = self.pos1.x - 1
-				new_pos2_x = self.pos2.x - 2
-			else:
-				new_pos1_x = self.pos1.x - 2
-				new_pos2_x = self.pos2.x - 1
-		else:
-			new_pos1_x = self.pos1.x - 1
-			new_pos2_x = self.pos2.x - 1
-		return Block([self.pos1.y, new_pos1_x], [self.pos2.y, new_pos2_x], self, "LEFT")
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board)
+		if newBlock.rotation == "STANDING":
+			newBlock.x -= 2
+			newBlock.rotation = "LAYING_X"
+		elif newBlock.rotation == "LAYING_X":
+			newBlock.x -= 1
+			newBlock.rotation = "STANDING"
+		elif newBlock.rotation == "LAYING_Y":
+			newBlock.x -= 1
+		return newBlock
 	
-	def __eq__(self, __o) -> bool:
-		return self.pos1 == __o.pos1 and self.pos2 ==__o.pos2
-			
-
-class pos:
-	def __init__(self,pos) -> None:
-		self.y = pos[0]
-		self.x = pos[1]
-
-	def __eq__(self, __o: object) -> bool:
-		return self.x == __o.x and self.y == __o.y
+	def RIGHT(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board)
+		if newBlock.rotation == "STANDING":
+			newBlock.x += 1
+			newBlock.rotation = "LAYING_X"
+		elif newBlock.rotation == "LAYING_X":
+			newBlock.x += 2
+			newBlock.rotation = "STANDING"
+		elif newBlock.rotation == "LAYING_Y":
+			newBlock.x += 1
+		return newBlock
+	
+	def SPLIT_UP(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.y -= 1
+		return newBlock
+	
+	def SPLIT_DOWN(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.y += 1
+		return newBlock
+	
+	def SPLIT_LEFT(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.x -= 1
+		return newBlock
+	
+	def SPLIT_RIGHT(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.x += 1
+		return newBlock
+	
+	def SPLIT_UP_1(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.y1 -= 1
+		return newBlock
+	
+	def SPLIT_DOWN_1(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.y1 += 1
+		return newBlock
+	
+	def SPLIT_LEFT_1(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.x1 -= 1
+		return newBlock
+	
+	def SPLIT_RIGHT_1(self):
+		newBlock = Block(self.x, self.y, self.rotation, self, self.board, self.x1, self.y1)
+		newBlock.x1 += 1
+		return newBlock
+	
+	def isGoal(self):
+		# statements
+		if self.rotation == "STANDING" and self.board[self.y][self.x] == 9:
+			return True
+		else:
+			return False

@@ -31,6 +31,7 @@ class Node:
 	
 
 def solve(block,goal):
+	virtualStep = 1
 	root = Node(block,goal)
 	queue = PriorityQueue()
 	queue.put(root)
@@ -39,8 +40,10 @@ def solve(block,goal):
 	while not(queue.empty()):
 		exam_node = queue.get()
 		exam_block = exam_node.block
-
+	
 		if exam_block.isGoal():
+			print("SUCCESS")
+			print("CONSUME {} VIRTUAL STEP".format(virtualStep))
 			return exam_block
 
 		if not(exam_block.isValidBlock()):
@@ -51,12 +54,16 @@ def solve(block,goal):
 
 		close.append(exam_node)
 
-		newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
+		
 		if exam_block.rotation == "SPLIT":
 			newBlocks += [exam_block.SPLIT_UP(), exam_block.SPLIT_DOWN(),
 	       				exam_block.SPLIT_LEFT(), exam_block.SPLIT_RIGHT(),
 						 exam_block.SPLIT_UP_1(), exam_block.SPLIT_DOWN_1(),
 	       				  exam_block.SPLIT_LEFT_1(), exam_block.SPLIT_RIGHT_1()]
+			virtualStep += 8
+		else:
+			newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
+			virtualStep += 4
 		
 		new_nodes = [Node(newBlock, goal, exam_node) for newBlock in newBlocks]
 

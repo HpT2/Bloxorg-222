@@ -5,6 +5,7 @@ import BFS
 import timeit
 import os
 import psutil
+import argparse
 
 def readMap(fileMap):
 	with open(fileMap) as f:
@@ -16,40 +17,60 @@ def readMap(fileMap):
 			switches.append(f.readline())
 		return init_pos, goal, num_of_switches, switches
 
-"""input stage 1 là màn 1, stage2 là màn 2,... dòng 1 là vị trí khởi đầu, dòng 2 là goal. dòng 3 là số lượn switch
-các dòng tiếp theo là switch, cuối cùng là map"""
-init, goal, num_of_switches, switches = readMap("stage/stage8.txt")
-map = np.loadtxt("stage/stage8.txt",dtype=int,skiprows=3+num_of_switches)
+def main():
+	args = argparse.ArgumentParser()
+	args.add_argument("-stage", help="choose a stage")
+	args.add_argument("-algorithm", help="BFS or A_star")
+	args = args.parse_args()
+	stage = "stage/stage"+args.stage+".txt"
+	algorithm = args.algorithm
 
-"""do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)""" 
+	init, goal, num_of_switches, switches = readMap(stage)
+	map = np.loadtxt(stage,dtype=int,skiprows=3+num_of_switches)
+	block = Block(init[1], init[0], "STANDING", None, map, switches=switches)
 
-block = Block(init[1], init[0], "STANDING", None, map, switches=switches)
+	print('Goal: {}'.format(goal))
+	print("Init block: [{}, {}]".format(block.y, block.x))
+	print("Map:\n{}".format(map))
 
-
-print('Goal: {}'.format(goal))
-print("block: [{}, {}]".format(block.y, block.x))
-print("Map:\n{}".format(map))
-
-"""Test"""
-print("##########Start solving with BFS algorithm##########")
-start = timeit.default_timer()
-
-finish_node = BFS.solve(block)
-stop = timeit.default_timer()
-
-
-print("Time taken: " + str(round(stop - start, 4)) + " s")
-
+	if algorithm == "BFS":
+		print("##########Start solving with BFS algorithm##########")
+		start = timeit.default_timer()
+		finish_node = BFS.solve(block)
+		stop = timeit.default_timer()
+		print("Time taken BFS: " + str(round(stop - start, 4)) + " s")
+		
+		if(finish_node):
+			path = []
+			while(finish_node.parent):
+				path = [finish_node.previousMove] + path
+				finish_node = finish_node.parent
+			print("Total step BFS: "+str(len(path)))
+			print(path)
+		else:
+			print("FAILED")
+	elif algorithm == "A_star":
+		print("##########Start solving with BFS algorithm##########")
+		start = timeit.default_timer()
+		finish_node = A_star.solve(block,goal)
+		stop = timeit.default_timer()
+		print("Time taken A*: " + str(round(stop - start, 4)) + " s")
+		
+		if(finish_node):
+			last = finish_node
+			path = []
+			while(last.parent):
+				path = [last.previousMove] + path
+				last = last.parent
+			print("Total step A*: "+str(len(path)))
+			print(path)
+		else:
+			print("FAILED")
+	else:
+		print("Algorithm must be BFS or A-star")
+	process = psutil.Process(os.getpid())
+	print('Memory usage: ' + str(round(process.memory_info().rss / (1024 * 1024), 2)) + " MB")
 process = psutil.Process(os.getpid())
 
-print('Memory usage: ' + str(round(process.memory_info().rss / (1024 * 1024), 2)) + " MB")
-if(finish_node):
-	last = finish_node
-	path = []
-	while(last.parent):
-		path = [last.previousMove] + path
-		last = last.parent
-	print("Total step: "+str(len(path)))
-	print(path)
-else:
-	print("FAILED")
+if __name__ == "__main__":
+	main()

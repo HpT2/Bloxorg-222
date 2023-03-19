@@ -6,12 +6,12 @@ class Node:
 	def __init__(self,block, goal, parent= None):
 		self.block = block
 		self.parent = parent
-		self.h_val = self.h(block,goal)
+		self.h_val = self.h(goal)
 		self.g_val = self.g(parent)
 		self.f_val = self.g_val + self.h_val
 
-	def h(self, block ,goal):
-		return ((math.dist([block.y,block.x],goal) + (( math.dist([block.y1,block.x1],goal)) if block.y1 else 0 )))/2
+	def h(self ,goal):
+		return ((math.dist([self.block.y,self.block.x],goal) + (( math.dist([self.block.y1,self.block.x1],goal)) if self.block.y1 else 0 )))/2
 	
 	def g(self, parent):
 		if parent == None:

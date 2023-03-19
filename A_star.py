@@ -6,12 +6,13 @@ class Node:
 	def __init__(self,block, goal, parent= None):
 		self.block = block
 		self.parent = parent
-		self.h_val = self.h(goal)
 		self.g_val = self.g(parent)
-		self.f_val = self.g_val + self.h_val
+		self.f_val = self.g_val + self.h(goal)
 
 	def h(self ,goal):
-		return ((math.dist([self.block.y,self.block.x],goal) + (( math.dist([self.block.y1,self.block.x1],goal)) if self.block.y1 else 0 ))) / 2
+		if self.block.rotation != "SPLIT":
+			return (math.dist([self.block.y,self.block.x],goal))
+		return ((math.dist([self.block.y,self.block.x],goal)) + math.dist([self.block.y,self.block.x],goal)) /2
 	
 	def g(self, parent):
 		if parent == None:
@@ -23,10 +24,15 @@ class Node:
 
 	def __eq__(self, __o: object) -> bool:
 		if __o:
-			return self.f_val == __o.f_val and self.block.x == __o.block.x \
-				and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 \
-					and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() \
-						and self.block.rotation == __o.block.rotation
+			if self.block.rotation == "SPLIT":
+				return self.block.x == __o.block.x \
+					and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 \
+						and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() \
+
+			else:
+				return  self.block.x == __o.block.x \
+					and self.block.y == __o.block.y and (self.block.board == __o.block.board).all() \
+							and self.block.rotation == __o.block.rotation
 		return False
 	
 
@@ -40,7 +46,7 @@ def solve(block,goal):
 	while not(queue.empty()):
 		exam_node = queue.get()
 		exam_block = exam_node.block
-	
+
 		if exam_block.isGoal():
 			print("SUCCESS")
 			print("CONSUME {} VIRTUAL STEP".format(virtualStep))

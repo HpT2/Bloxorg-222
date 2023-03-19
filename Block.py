@@ -186,16 +186,14 @@ class Block:
 					self.rotation = "LAYING_X"
 					self.x   = x1
 
-
 				# case LAYING_Y: y first
 				if x == x1 and y == y1 - 1:
 					self.rotation = "LAYING_Y"
-
+				
 				# case LAYING_Y: y1 first
 				if x == x1 and y == y1 + 1:
 					self.rotation = "LAYING_Y"
 					self.y   = y1
-
 		
 		# Case 8: Chữ X (only mở)
 			if rot == "STANDING" and board[y][x] == 8:

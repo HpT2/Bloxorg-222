@@ -11,7 +11,7 @@ class Node:
 		self.f_val = self.g_val + self.h_val
 
 	def h(self, block ,goal):
-		return ((math.dist([block.y,block.x],goal) + (( math.dist([block.y1,block.x1],goal))/2 if block.y1 else 0 )))/2
+		return ((math.dist([block.y,block.x],goal) + (( math.dist([block.y1,block.x1],goal)) if block.y1 else 0 )))/2
 	
 	def g(self, parent):
 		if parent == None:

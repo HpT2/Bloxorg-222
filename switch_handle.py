@@ -26,13 +26,13 @@ def isNumberThree(block,y,x):
 def isNumberFour(block,y,x):
     
     #print("(x-y) = (", x,"-", y,")")
-
     for switch in block.switches:
+        switch = np.fromstring(switch, dtype=int, sep=" ")
         if (y,x) ==  (switch[0], switch[1]):
-            
             num = switch[2]
             
             for i in range(num):
+                
                 bY = switch[2*i+3]
                 bX = switch[2*i+4]
                 block.board[bY][bX] = 0
@@ -58,6 +58,7 @@ def isNumberFive(block,y,x):
 def isNumberSix(block,y,x):
 
     for switch in block.switches:
+        switch = np.fromstring(switch, dtype=int, sep=" ")
         if (y,x) ==  (switch[0], switch[1]):
             
             num = switch[2]
@@ -72,6 +73,7 @@ def isNumberSeven(block,y,x):
 
     array = []    
     for switch in block.switches:
+        switch = np.fromstring(switch, dtype=int, sep=" ") 
         if (y,x) ==  (switch[0], switch[1]):
             num = switch[2]
             # format x7 y7 2 x y x1 y1
@@ -89,6 +91,7 @@ def isNumberSeven(block,y,x):
 def isNumberEight(block,y,x):
 
     for switch in block.switches:
+        switch = np.fromstring(switch, dtype=int, sep=" ") 
         if (y,x) ==  (switch[0], switch[1]):
 
             num = switch[2]

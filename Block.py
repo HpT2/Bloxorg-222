@@ -1,5 +1,7 @@
 import copy
+
 import switch_handle
+
 class Block:
 	def __init__(self, x, y, rotation, parent, board, previousMove= None, x1=None,y1=None):
 		self.x = x
@@ -108,7 +110,7 @@ class Block:
 				return False
 		except:
 			return False
-		
+
 	
 	def isvalidBlock(self):
 		if isFloor(self):
@@ -179,4 +181,4 @@ class Block:
 
 
 	
-	
+

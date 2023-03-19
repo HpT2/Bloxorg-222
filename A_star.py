@@ -1,73 +1,68 @@
 import math
+from queue import PriorityQueue
 
-def getMove(block):
-	return [block.UP(),
-			block.DOWN(),
-			block.LEFT(),
-			block.RIGHT()]
-
-def solve(stage, block):
-	open = []
-	close = []
-	exam_node = []
-	path = []
-
-	solver = A_star(h_func, g_func)
-
-	if (solver.createNode(block,stage.goal).value == 0):
-		return examine
-	move = getMove(block)
-	open = [solver.createNode(x,stage.goal) for x in move]
-	open.sort(key = lambda x: x.value, reverse=True)
-
-	while(len(open) > 0):
-		exam_node = [open.pop()] + exam_node 
-
-		x = exam_node.pop(0)
-		value = x.value
-
-
-		if (stage.GameOver(x.block)):
-			continue
-		
-		if (x.block in close):
-			continue
-
-		if(value == 0 ):
-			print("done")
-			return path
-			break
-
-		#print("Move: {}".format(x.block.previousMove + " Cur: [{},{}][{},{}]".format(x.block.pos1.y,x.block.pos1.x,x.block.pos2.y,x.block.pos2.x)) + " Dead: {}".format(str(stage.GameOver(x.block))))
-		close.append(x.block)
-		path.append(x.block)
-
-		move = getMove(x.block)
-		new_nodes = [solver.createNode(y,stage.goal) for y in move]
-		new_nodes.sort(key = lambda x: x.value, reverse=True)
-		for node in new_nodes:
-			open.append(node)
-	print("Failed")
-	return exam_node
-	
-
-def h_func(block,goal):
-	return (math.dist([block.pos1.y, block.pos1.x], goal) + math.dist([block.pos2.y, block.pos2.x], goal)) / 2
-
-def g_func(x):
-	return x 
 
 class Node:
-	def __init__(self, h, g, block, goal ) -> None:
-		self.value = h(block,goal ) + g(0)
+	def __init__(self,block, goal, parent= None):
 		self.block = block
+		self.parent = parent
+		self.h_val = self.h(block,goal)
+		self.g_val = self.g(parent)
+		self.f_val = self.g_val + self.h_val
 
-class A_star:
-	def __init__(self, h, g) -> None:
-		self.h_func = h
-		self.g_func = g
-
-	def createNode(self,block,goal) -> Node :
-		return Node(self.h_func, self.g_func, block,goal)
+	def h(self, block ,goal):
+		return ((math.dist([block.y,block.x],goal) + (( math.dist([block.y1,block.x1],goal)) if block.y1 else 0 )))/2
 	
+	def g(self, parent):
+		if parent == None:
+			return 0
+		return parent.g_val + 1
+	
+	def __lt__(self, other) -> bool:
+		return self.f_val < other.f_val
+
+	def __eq__(self, __o: object) -> bool:
+		if __o:
+			return self.f_val == __o.f_val and self.block.x == __o.block.x and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() and self.block.rotation == __o.block.rotation
+		return False
+	
+
+def solve(block,goal):
+	root = Node(block,goal)
+	queue = PriorityQueue()
+	queue.put(root)
+	close = []
+
+	while not(queue.empty()):
+		exam_node = queue.get()
+		exam_block = exam_node.block
+
+		if exam_block.isGoal():
+			return exam_block
+		
+		if exam_block.GameOver():
+			continue
+
+		if exam_node in close:
+			continue
+
+		close.append(exam_node)
+
+		newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
+		if exam_block.rotation == "SPLIT":
+			newBlocks += [exam_block.SPLIT_UP(), exam_block.SPLIT_DOWN(),
+	       				exam_block.SPLIT_LEFT(), exam_block.SPLIT_RIGHT(),
+						 exam_block.SPLIT_UP_1(), exam_block.SPLIT_DOWN_1(),
+	       				  exam_block.SPLIT_LEFT_1(), exam_block.SPLIT_RIGHT_1()]
+		
+		new_nodes = [Node(newBlock, goal, exam_node) for newBlock in newBlocks]
+
+		for node in new_nodes:
+			queue.put(node)
+
+		
+
+
+
+    	
 

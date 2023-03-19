@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-def A_star(block): pass
-=======
 import math
 from queue import PriorityQueue
 
@@ -72,4 +69,3 @@ def solve(block,goal):
 
     	
 
->>>>>>> upstream/main

@@ -25,13 +25,12 @@ class Node:
 		if __o:
 			return self.f_val == __o.f_val and self.block.x == __o.block.x \
 				and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 \
-					and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() \
-						and self.block.rotation == __o.block.rotation
+					and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all()
 		return False
 	
 
 def solve(block,goal):
-	virtualStep = 1
+	virtualStep = 0
 	root = Node(block,goal)
 	queue = PriorityQueue()
 	queue.put(root)
@@ -53,17 +52,15 @@ def solve(block,goal):
 			continue
 
 		close.append(exam_node)
-
-		
-		if exam_block.rotation == "SPLIT":
+		if exam_block.rotation != "SPLIT":
+			newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
+			virtualStep += 4
+		else:
 			newBlocks += [exam_block.SPLIT_UP(), exam_block.SPLIT_DOWN(),
 	       				exam_block.SPLIT_LEFT(), exam_block.SPLIT_RIGHT(),
 						 exam_block.SPLIT_UP_1(), exam_block.SPLIT_DOWN_1(),
 	       				  exam_block.SPLIT_LEFT_1(), exam_block.SPLIT_RIGHT_1()]
 			virtualStep += 8
-		else:
-			newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
-			virtualStep += 4
 		
 		new_nodes = [Node(newBlock, goal, exam_node) for newBlock in newBlocks]
 

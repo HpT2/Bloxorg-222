@@ -17,8 +17,8 @@ def readMap(fileMap):
 
 """input stage 1 là màn 1, stage2 là màn 2,... dòng 1 là vị trí khởi đầu, dòng 2 là goal. dòng 3 là số lượn switch
 các dòng tiếp theo là switch, cuối cùng là map"""
-init, goal, num_of_switches, switches = readMap("stage/stage2.txt")
-map = np.loadtxt("stage/stage2.txt",dtype=int,skiprows=3+num_of_switches)
+init, goal, num_of_switches, switches = readMap("stage/stage6.txt")
+map = np.loadtxt("stage/stage6.txt",dtype=int,skiprows=3+num_of_switches)
 
 """do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)""" 
 

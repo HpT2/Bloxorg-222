@@ -1,7 +1,8 @@
 import copy
+from switch_handle import *
 
 class Block:
-	def __init__(self, x, y, rotation, parent, board, previousMove= None, x1=None,y1=None):
+	def __init__(self, x, y, rotation, parent, board, previousMove= None, x1=None,y1=None, switches = None):
 		self.x = x
 		self.y = y
 		self.rotation = rotation
@@ -10,6 +11,10 @@ class Block:
 		self.previousMove = previousMove
 		self.x1 = x1
 		self.y1 = y1
+		if switches == None:
+			self.switches = parent.switches
+		else:
+			self.switches = switches
 
 	def UP(self):
 		newBlock = Block(self.x, self.y, self.rotation, self, self.board, "UP")
@@ -109,19 +114,94 @@ class Block:
 		except:
 			return False
 		
-	def GameOver(self):
+	def isValidBlock(self):
 		try:
-			if self.rotation == "STANDING" and self.board[self.y][self.x] == 0 :
-				return True
-			if self.rotation == "LAYING_Y" and (self.board[self.y][self.x] == 0 or self.board[self.y+1][self.x] == 0 ):
-				return True
-			if self.rotation == "LAYING_X" and (self.board[self.y][self.x] == 0 or self.board[self.y][self.x+1] == 0 ):
-				return True
-			if self.rotation == "SPLIT" and self.board[self.y1][self.x1] == 0:
-				return True
-		except :
+			# local definition
+			x     = self.x
+			y     = self.y
+			x1    = self.x1
+			y1    = self.y1
+			rot   = self.rotation
+			board = self.board
+
+			if board[y][x] == 0:
+				return False
+			
+			# Case 2: Đo đỏ
+			if rot == "STANDING" and board[y][x] == 2:
+				return False 
+			if rot == "LAYING_Y" and board[y+1][x] == 0:
+				return False
+			if rot == "LAYING_X" and board[y][x+1] == 0:
+				return False
+			if rot == "SPLIT" and board[y1][x1] == 0:
+				return False
+
+			# Case 3: Chữ X
+			if rot == "STANDING" and board[y][x] == 3:
+				isNumberThree(self,y,x)
+
+			# Case 4: Cục tròn đặc (only đóng).
+			if board[y][x] == 4:
+				isNumberFour(self,y,x)
+			if rot == "LAYING_X" and board[y][x+1] == 4:
+				isNumberFour(self,y,x+1)
+			if rot == "LAYING_Y" and board[y+1][x] == 4:
+				isNumberFour(self,y+1,x)
+			if rot == "SPLIT" and board[y1][x1] == 4:
+				isNumberFour(self,y1,x1)
+
+
+			# Case 5: Cục tròn đặc (toggle)
+			if board[y][x] == 5:
+				isNumberFive(self,y,x)
+			if rot == "LAYING_X" and board[y][x+1] == 5:
+				isNumberFive(self,y,x+1)
+			if rot == "LAYING_Y" and board[y+1][x] == 5:
+				isNumberFive(self,y+1,x)
+			if rot == "SPLIT" and board[y1][x1] == 5:
+				isNumberFive(self,y1,x1)
+
+			# Case 6: Cục tròn đặc (only mở)
+			if board[y][x] == 6:
+				isNumberSix(self,y,x)
+			if rot == "LAYING_X" and board[y][x+1] == 6:
+				isNumberSix(self,y,x+1)
+			if rot == "LAYING_Y" and board[y+1][x] == 6:
+				isNumberSix(self,y+1,x)
+			if rot == "SPLIT" and board[y1][x1] == 6:
+				isNumberSix(self,y1,x1)
+
+			# Case 7: Phân thân 
+			if rot == "STANDING" and board[y][x] == 7:
+				isNumberSeven(self,y,x)
+			# Case7_1: MERGE BLOCK
+			if rot == "SPLIT": # check IS_MERGE
+				# case LAYING_X: x first
+				if y == y1 and x == x1 -1:
+					self.rotation = "LAYING_X"
+
+				# case LAYING_X: x1 first
+				if y == y1 and x == x1 + 1:
+					self.rotation = "LAYING_X"
+					self.x   = x1
+
+				# case LAYING_Y: y first
+				if x == x1 and y == y1 - 1:
+					self.rotation = "LAYING_Y"
+				
+				# case LAYING_Y: y1 first
+				if x == x1 and y == y1 + 1:
+					self.rotation = "LAYING_Y"
+					self.y   = y1
+		
+		# Case 8: Chữ X (only mở)
+			if rot == "STANDING" and board[y][x] == 8:
+				isNumberEight(self,y,x)
+
 			return True
-		return False
+		except:
+			return False
 	
 	def isSwitch(self):	
 		pass

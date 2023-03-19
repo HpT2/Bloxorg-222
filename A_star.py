@@ -23,7 +23,10 @@ class Node:
 
 	def __eq__(self, __o: object) -> bool:
 		if __o:
-			return self.f_val == __o.f_val and self.block.x == __o.block.x and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() and self.block.rotation == __o.block.rotation
+			return self.f_val == __o.f_val and self.block.x == __o.block.x \
+				and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 \
+					and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() \
+						and self.block.rotation == __o.block.rotation
 		return False
 	
 
@@ -39,8 +42,8 @@ def solve(block,goal):
 
 		if exam_block.isGoal():
 			return exam_block
-		
-		if exam_block.GameOver():
+
+		if not(exam_block.isValidBlock()):
 			continue
 
 		if exam_node in close:

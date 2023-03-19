@@ -5,16 +5,24 @@ import timeit
 import os
 import psutil
 
-"""input stage 1 là màn 1, stage2 là màn 3, dòng 1 là vị trí khởi đầu, dòng 2 là goal"""
-with open("stage/stage6.txt") as file:
-	init = [int(x) for x in file.readline().split(' ')]
-	goal = [int(x) for x in file.readline().split(' ')]
+def readMap(fileMap):
+	with open(fileMap) as f:
+		init_pos = [int(x) for x in f.readline().split(" ")] # read 1st line
+		goal = [int(x) for x in f.readline().split(" ")] # read 2nd line
+		num_of_switches = int(f.readline()) # read 3rd line
+		switches = []
+		for i in range(num_of_switches):
+			switches.append(f.readline())
+		return init_pos, goal, num_of_switches, switches
 
-
-map = np.loadtxt("stage/stage6.txt",dtype=int,skiprows=2)
+"""input stage 1 là màn 1, stage2 là màn 2,... dòng 1 là vị trí khởi đầu, dòng 2 là goal. dòng 3 là số lượn switch
+các dòng tiếp theo là switch, cuối cùng là map"""
+init, goal, num_of_switches, switches = readMap("stage/stage2.txt")
+map = np.loadtxt("stage/stage2.txt",dtype=int,skiprows=3+num_of_switches)
 
 """do numpy array đọc theo y trước x nên tọa độ phải theo thứ tự (y,x)""" 
-block = Block(init[1], init[0], "STANDING", None, map)
+
+block = Block(init[1], init[0], "STANDING", None, map, switches=switches)
 
 
 print('Goal: {}'.format(goal))
@@ -22,11 +30,14 @@ print("block: [{}, {}]".format(block.y, block.x))
 print("Map:\n{}".format(map))
 
 """Test"""
+print("##########Start solving with A* algorithm##########")
 start = timeit.default_timer()
+
 finish_node = A_star.solve(block, goal)
 stop = timeit.default_timer()
 
-print("A-star take: " + str(round(stop - start, 4)) + " s")
+
+print("Time taken: " + str(round(stop - start, 4)) + " s")
 
 process = psutil.Process(os.getpid())
 
@@ -36,9 +47,8 @@ if(finish_node):
 	path = []
 	while(last.parent):
 		path = [last.previousMove] + path
-		#print('[{} {}] [{} {}] {}'.format(last.block.pos1.y,last.block.pos1.x,last.block.pos2.y, last.block.pos2.x,last.block.previousMove))
 		last = last.parent
-	print(len(path))
+	print("Total step: "+str(len(path)))
 	print(path)
 else:
 	print("FAILED")

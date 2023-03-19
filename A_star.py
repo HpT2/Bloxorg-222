@@ -11,7 +11,7 @@ class Node:
 		self.f_val = self.g_val + self.h_val
 
 	def h(self ,goal):
-		return ((math.dist([self.block.y,self.block.x],goal) + (( math.dist([self.block.y1,self.block.x1],goal)) if self.block.y1 else 0 )))/2
+		return ((math.dist([self.block.y,self.block.x],goal) + (( math.dist([self.block.y1,self.block.x1],goal)) if self.block.y1 else 0 ))) / 2
 	
 	def g(self, parent):
 		if parent == None:
@@ -25,7 +25,8 @@ class Node:
 		if __o:
 			return self.f_val == __o.f_val and self.block.x == __o.block.x \
 				and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 \
-					and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all()
+					and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() \
+						and self.block.rotation == __o.block.rotation
 		return False
 	
 
@@ -56,7 +57,7 @@ def solve(block,goal):
 			newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
 			virtualStep += 4
 		else:
-			newBlocks += [exam_block.SPLIT_UP(), exam_block.SPLIT_DOWN(),
+			newBlocks = [exam_block.SPLIT_UP(), exam_block.SPLIT_DOWN(),
 	       				exam_block.SPLIT_LEFT(), exam_block.SPLIT_RIGHT(),
 						 exam_block.SPLIT_UP_1(), exam_block.SPLIT_DOWN_1(),
 	       				  exam_block.SPLIT_LEFT_1(), exam_block.SPLIT_RIGHT_1()]

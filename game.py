@@ -50,7 +50,7 @@ def main():
 		else:
 			print("FAILED")
 	elif algorithm == "A_star":
-		print("##########Start solving with BFS algorithm##########")
+		print("##########Start solving with A* algorithm##########")
 		start = timeit.default_timer()
 		finish_node = A_star.solve(block,goal)
 		stop = timeit.default_timer()

@@ -1,6 +1,7 @@
 import numpy as np
 from Block import Block
 import A_star
+import BFS
 import timeit
 import os
 import psutil
@@ -30,10 +31,10 @@ print("block: [{}, {}]".format(block.y, block.x))
 print("Map:\n{}".format(map))
 
 """Test"""
-print("##########Start solving with A* algorithm##########")
+print("##########Start solving with BFS algorithm##########")
 start = timeit.default_timer()
 
-finish_node = A_star.solve(block, goal)
+finish_node = BFS.solve(block)
 stop = timeit.default_timer()
 
 

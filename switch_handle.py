@@ -69,9 +69,9 @@ def isNumberSix(block,y,x):
 
 # Case 7: Cục phân thân
 def isNumberSeven(block,y,x):  
-    board = block.board
+
     array = []    
-    for switch in switches:
+    for switch in block.switches:
         if (y,x) ==  (switch[0], switch[1]):
             num = switch[2]
             # format x7 y7 2 x y x1 y1

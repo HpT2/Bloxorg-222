@@ -202,3 +202,14 @@ class Block:
 			return True
 		except:
 			return False
+
+	def __eq__(self, __o: object) -> bool:
+		if __o:
+			if self.rotation == "SPLIT":
+				return self.x == __o.x \
+					and self.y == __o.y and self.x1 == __o.x1 \
+						and self.y1 == __o.y1 and (self.board == __o.board).all()
+			else:
+				return self.x == __o.x and self.y == __o.y \
+					and self.rotation == __o.rotation and (self.board == __o.board).all()
+		return False

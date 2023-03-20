@@ -202,6 +202,3 @@ class Block:
 			return True
 		except:
 			return False
-	
-	def isSwitch(self):	
-		pass

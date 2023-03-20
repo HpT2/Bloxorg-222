@@ -12,7 +12,7 @@ class Node:
 	def h(self ,goal):
 		if self.block.rotation != "SPLIT":
 			return (math.dist([self.block.y,self.block.x],goal))
-		return ((math.dist([self.block.y,self.block.x],goal)) + math.dist([self.block.y,self.block.x],goal)) /2
+		return ((math.dist([self.block.y,self.block.x],goal)) + math.dist([self.block.y,self.block.x],goal)) / 2
 	
 	def g(self, parent):
 		if parent == None:

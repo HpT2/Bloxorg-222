@@ -1,4 +1,3 @@
-import queue as Q
 def solve(block):
     passState = []
     Queue = []
@@ -35,13 +34,13 @@ def solve(block):
             move(Queue,current.SPLIT_DOWN_1(), passState)
     return False
 
-def move(Stack, block, passState):
+def move(Queue, block, passState):
     
     if block.isValidBlock():
         if isVisited(block,passState):
             return None
 
-        Stack.append(block)
+        Queue.append(block)
         passState.append(block)
         #print(flag)
         return True 

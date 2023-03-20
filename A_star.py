@@ -12,7 +12,7 @@ class Node:
 	def h(self ,goal):
 		if self.block.rotation != "SPLIT":
 			return (math.dist([self.block.y,self.block.x],goal))
-		return ((math.dist([self.block.y,self.block.x],goal)) + math.dist([self.block.y,self.block.x],goal)) /2
+		return ((math.dist([self.block.y,self.block.x],goal)) + math.dist([self.block.y,self.block.x],goal)) / 2
 	
 	def g(self, parent):
 		if parent == None:
@@ -22,14 +22,7 @@ class Node:
 	def __lt__(self, other) -> bool:
 		return self.f_val < other.f_val
 
-	def __eq__(self, __o: object) -> bool:
-		if __o:
-				return self.block.x == __o.block.x \
-					and self.block.y == __o.block.y and self.block.x1 == __o.block.x1 \
-						and self.block.y1 == __o.block.y1 and (self.block.board == __o.block.board).all() \
-							and self.block.rotation == __o.block.rotation
 
-		return False
 	
 
 def solve(block,goal):
@@ -51,10 +44,10 @@ def solve(block,goal):
 		if not(exam_block.isValidBlock()):
 			continue
 
-		if exam_node in close:
+		if exam_block in close:
 			continue
 
-		close.append(exam_node)
+		close.append(exam_block)
 		if exam_block.rotation != "SPLIT":
 			newBlocks = [exam_block.UP(), exam_block.DOWN(), exam_block.LEFT(), exam_block.RIGHT()]
 			virtualStep += 4

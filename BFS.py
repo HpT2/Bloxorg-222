@@ -2,12 +2,13 @@ def solve(block):
     passState = []
     Queue = []
     Queue.append(block)
-
-    virtualStep = 0
+    traversed = 0
+    appended = 0
     
     while Queue:
         current = Queue.pop(0)
-
+        traversed += 1
+        
         if not(current.isValidBlock()):
             continue
 
@@ -18,18 +19,19 @@ def solve(block):
 
         if current.isGoal():
             print("SUCCESS")
-            print("COMSUME", virtualStep, "VIRTUAL STEP")
+            print("APPENDED", appended, "NODE")
+            print("TRAVERSED", traversed, "NODE")
             return current
 
         if current.rotation != "SPLIT":
-            virtualStep += 4
+            appended += 4
             
             Queue.append(current.UP())
             Queue.append(current.RIGHT())
             Queue.append(current.DOWN())
             Queue.append(current.LEFT())
         else: 
-            virtualStep += 8
+            appended += 8
 
             Queue.append(current.SPLIT_LEFT())
             Queue.append(current.SPLIT_RIGHT())

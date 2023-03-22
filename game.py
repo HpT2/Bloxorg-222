@@ -17,6 +17,15 @@ def readMap(fileMap):
 			switches.append(f.readline())
 		return init_pos, goal, num_of_switches, switches
 
+def printMap(map):
+	for i in range(len(map)):
+		for j in range(len(map[i])):
+			if map[i][j] == 0:
+				print(" ",end=" ")
+				continue
+			print(map[i][j],end=" ")
+		print()
+
 def main():
 	args = argparse.ArgumentParser()
 	args.add_argument("-stage", help="choose a stage")
@@ -31,7 +40,8 @@ def main():
 
 	print('Goal: {}'.format(goal))
 	print("Init block: [{}, {}]".format(block.y, block.x))
-	print("Map:\n{}".format(map))
+	print("Map:\n")
+	printMap(map)
 
 	if algorithm == "BFS":
 		print("##########Start solving with BFS algorithm##########")

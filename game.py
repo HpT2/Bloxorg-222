@@ -75,7 +75,7 @@ def main():
 	elif algorithm == "MonteCarlo":
 		print("##########Start solving with Monte Carlo algorithm##########")
 		start = timeit.default_timer()
-		finish_node = MonteCarlo.solve(block)
+		finish_node = MonteCarlo.solve(block, goal)
 		stop = timeit.default_timer()
 
 		print("Time taken: " + str(round(stop - start, 4)) + " s")
@@ -104,6 +104,10 @@ def main():
 	while True:
 		drawGrid(finish_node)
 		drawBlock(finish_node)
+		if algorithm == "MonteCarlo":
+			pygame.time.wait(100)
+		else:
+			pygame.time.wait(1000)
 		if not path:
 			break
 		finish_node = move(finish_node, path.pop(0))
@@ -112,9 +116,9 @@ def main():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
-			else:
-				continue
+
 		pygame.display.update()
+
 
 def move(block, path):
 	if path == "UP":
@@ -165,6 +169,9 @@ def drawGrid(block):
 			if block.board[int(y/40)][int(x/40)] == 7:
 				pygame.draw.rect(SCREEN, (120,250,125), rect)
 
+			if block.board[int(y/40)][int(x/40)] in [0,9]:
+				pygame.draw.rect(SCREEN, (0,0,0), rect)
+
 
 def drawBlock(block):
 	blockSize = 40 #Set the size of the grid block
@@ -186,7 +193,7 @@ def drawBlock(block):
 				if x == block.x1 * 40 and y == block.y1 * 40:
 					pygame.draw.rect(SCREEN, (255,0,0), rect)
 
-	pygame.time.wait(1000)
+
 
 
 if __name__ == "__main__":

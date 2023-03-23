@@ -36,6 +36,7 @@ def solve(block,goal):
 		exam_node = queue.get()
 		exam_block = exam_node.block
 		traversed += 1
+		
 		if exam_block.isGoal():
 			print("SUCCESS")
 			print("APPENDED {} NODE".format(appended))

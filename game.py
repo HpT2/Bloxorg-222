@@ -93,15 +93,14 @@ def main():
 	print("Total move: "+str(len(path)))
 	print(path)
 
-	'''init board'''
-	BLACK = (0,0,0)
+
 	global SCREEN, CLOCK, WINDOW_WIDTH, WINDOW_HEIGHT
 	pygame.init()
 	WINDOW_WIDTH = len(map[0]) * 40
 	WINDOW_HEIGHT = len(map) * 40
 	SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 	CLOCK = pygame.time.Clock()
-	SCREEN.fill(BLACK)
+	SCREEN.fill((0,0,0))
 	while True:
 		drawGrid(finish_node)
 		drawBlock(finish_node)
@@ -147,7 +146,7 @@ def drawGrid(block):
 	blockSize = 40 #Set the size of the grid block
 	for x in range(0, WINDOW_WIDTH, blockSize):
 		for y in range(0, WINDOW_HEIGHT, blockSize):
-			rect = pygame.Rect(x, y, blockSize-5, blockSize-5)
+			rect = pygame.Rect(x, y, blockSize-2, blockSize-2)
 
 			'''init board'''
 			if block.board[int(y/40)][int(x/40)] == 1:
@@ -171,7 +170,7 @@ def drawBlock(block):
 	blockSize = 40 #Set the size of the grid block
 	for x in range(0, WINDOW_WIDTH, blockSize):
 		for y in range(0, WINDOW_HEIGHT, blockSize):
-			rect = pygame.Rect(x, y, blockSize-5, blockSize-5)
+			rect = pygame.Rect(x, y, blockSize-2, blockSize-2)
 			if x == block.x * 40 and y == block.y * 40:
 				pygame.draw.rect(SCREEN, (255,0,0), rect)
 

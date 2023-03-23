@@ -9,6 +9,12 @@ def solve(block):
         current = Queue.pop(0)
         traversed += 1
         
+        if current.isGoal():
+            print("SUCCESS")
+            print("APPENDED", appended, "NODE")
+            print("TRAVERSED", traversed, "NODE")
+            return current
+
         if not(current.isValidBlock()):
             continue
 
@@ -16,12 +22,6 @@ def solve(block):
             continue
         
         passState.append(current)
-
-        if current.isGoal():
-            print("SUCCESS")
-            print("APPENDED", appended, "NODE")
-            print("TRAVERSED", traversed, "NODE")
-            return current
 
         if current.rotation != "SPLIT":
             appended += 4

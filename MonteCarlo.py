@@ -10,7 +10,10 @@ def make_move(block):
 	return [block.UP(), block.DOWN(),block.LEFT(), block.RIGHT()]
 
 
-
+def h(block ,goal):
+		if block.rotation != "SPLIT":
+			return (math.dist([block.y,block.x],goal))
+		return ((math.dist([block.y,block.x],goal)) + math.dist([block.y,block.x],goal)) / 2
 
 class Node:
 	def __init__(self, block, parent) -> None:
@@ -39,14 +42,29 @@ class Node:
 	def expand(self):
 		self.children = [Node(block, self) for block in make_move(self.block) if block.isValidBlock()]
 
-	def simulate(self):
+	def simulate(self, goal):
 		block_ = self.block
-		parent = block_
 		i = 0
 		while not block_.isGoal():
 			move = [block for block in make_move(block_) if block.isValidBlock()]
+			parent = block_.parent	
 			block_ = random.choice(move)
+			"""
+			block_scores = [(h(block, goal), block) for block in move]
+			min_block = min(block_scores, key=lambda child: child[0])
+			if min_block[1] == parent:
+				block_scores.remove(min_block)
+				try:
+					min_block = min(block_scores, key=lambda child: child[0])
+				except:
+					block_ = block_.parent
+					i -= 1
+
+			parent = block_
+			block_ = min_block[1]
+			"""
 			i += 1
+			#print(block_.previousMove)
 		return  -i
 	
 	def backpropagate(self, score):
@@ -58,7 +76,7 @@ class Node:
 
 
 	
-def MonteCarlo(root, max_ite, examined):
+def MonteCarlo(root, max_ite,goal, examined):
 	for i in range(max_ite):
 		node = root
 
@@ -74,7 +92,7 @@ def MonteCarlo(root, max_ite, examined):
 		
 
 		#simulation
-		score = node.simulate()
+		score = node.simulate(goal)
 
 		#backpropagation
 		node.backpropagate(score)
@@ -95,7 +113,7 @@ def solve(block,goal):
 	examined = []
 	i = 0
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 10, examined)
+		node = MonteCarlo(node, 10,goal, examined)
 		if node.block not in examined:
 			examined.append(node.block)
 		#print(node.block.previousMove)

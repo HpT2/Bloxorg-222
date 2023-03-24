@@ -10,11 +10,6 @@ def make_move(block):
 	return [block.UP(), block.DOWN(),block.LEFT(), block.RIGHT()]
 
 
-def h(block ,goal):
-		if block.rotation != "SPLIT":
-			return (math.dist([block.y,block.x],goal))
-		return ((math.dist([block.y,block.x],goal)) + math.dist([block.y,block.x],goal)) / 2
-
 class Node:
 	def __init__(self, block, parent) -> None:
 		self.block = block
@@ -42,27 +37,12 @@ class Node:
 	def expand(self):
 		self.children = [Node(block, self) for block in make_move(self.block) if block.isValidBlock()]
 
-	def simulate(self, goal):
+	def simulate(self):
 		block_ = self.block
 		i = 0
 		while not block_.isGoal():
 			move = [block for block in make_move(block_) if block.isValidBlock()]
-			parent = block_.parent	
 			block_ = random.choice(move)
-			"""
-			block_scores = [(h(block, goal), block) for block in move]
-			min_block = min(block_scores, key=lambda child: child[0])
-			if min_block[1] == parent:
-				block_scores.remove(min_block)
-				try:
-					min_block = min(block_scores, key=lambda child: child[0])
-				except:
-					block_ = block_.parent
-					i -= 1
-
-			parent = block_
-			block_ = min_block[1]
-			"""
 			i += 1
 			#print(block_.previousMove)
 		return  -i
@@ -76,12 +56,12 @@ class Node:
 
 
 	
-def MonteCarlo(root, max_ite,goal, examined):
+def MonteCarlo(root, max_ite, examined):
 	for i in range(max_ite):
 		node = root
 
 		#selection
-		while not node.children == []:
+		while node.children:
 			node = node.select()
 
 
@@ -92,11 +72,12 @@ def MonteCarlo(root, max_ite,goal, examined):
 		
 
 		#simulation
-		score = node.simulate(goal)
+		score = node.simulate()
 
 		#backpropagation
 		node.backpropagate(score)
 	best = max(root.children, key=lambda child: child.visits)
+
 	while best.block in examined:
 		try:
 			root.children.remove(best)
@@ -107,14 +88,16 @@ def MonteCarlo(root, max_ite,goal, examined):
 		#best = max(root.children, key=lambda child: child.visits)
 	return best
 
-def solve(block,goal):
+def solve(block):
 	root = Node(block, None)
 	node = root
 	examined = []
 	i = 0
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 10,goal, examined)
+		node = MonteCarlo(node, 1000, examined)
 		if node.block not in examined:
 			examined.append(node.block)
+
+
 		#print(node.block.previousMove)
 	return node.block

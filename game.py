@@ -75,7 +75,7 @@ def main():
 	elif algorithm == "MonteCarlo":
 		print("##########Start solving with Monte Carlo algorithm##########")
 		start = timeit.default_timer()
-		finish_node = MonteCarlo.solve(block,goal)
+		finish_node = MonteCarlo.solve(block)
 		#finish_node = MonteCarlo.solve(block)
 		stop = timeit.default_timer()
 

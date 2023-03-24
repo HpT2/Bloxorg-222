@@ -9,88 +9,112 @@ def make_move(block):
 	       		   block.SPLIT_LEFT_1(), block.SPLIT_RIGHT_1()]
 	return [block.UP(), block.DOWN(),block.LEFT(), block.RIGHT()]
 
+
 def h(block ,goal):
 		if block.rotation != "SPLIT":
-			return (math.dist([block.y, block.x],goal))
-		return ((math.dist([block.y, block.x],goal)) + math.dist([block.y, block.x],goal)) / 2
-	
-
-def createNode(root, goal):
-	new_nodes = [Node(block, root, goal) for block in make_move(root.block) if block.isValidBlock()]
-	for node in new_nodes:
-		root.children.append(node)
-	return root
-
-def examined(node):
-	examined = []
-	while node.parent:
-		node = node.parent
-		examined.append(node.block)
-	return examined
+			return (math.dist([block.y,block.x],goal))
+		return ((math.dist([block.y,block.x],goal)) + math.dist([block.y,block.x],goal)) / 2
 
 class Node:
-	def __init__(self, block, parent, goal) -> None:
+	def __init__(self, block, parent) -> None:
 		self.block = block
 		self.parent = parent
 		self.children = []
-		self.score = -h(block, goal)
+		self.score = 0
 		self.visits = 1
 
-	def select(self):
-		if self.children == []:
-			return self
-		UCT_CONST = 1.414 # adjust to balance exploration and exploitation
-		best_child = None
-		best_score = float('-inf')
-		for child in self.children:
-			score = child.score / child.visits + UCT_CONST * math.sqrt(
-			math.log(self.visits) / child.visits)
-			#score = child.score / child.visits
-			
-			if score > best_score:
-				best_child = child
-				best_score = score
-		if best_child.block in examined(best_child):
-			self.children.remove(best_child)
-			return self.select()
-		return best_child
 
-	def simulate(self):
-		if not self.children:
-			return self.score
-		node = random.choice(self.children) 
-		return node.score
+	def select(self):
+		if not self.children == []:
+			best_child = None
+			score = float('-inf')
+			c = math.sqrt(2)
+			for child in self.children:
+				new_score = child.score / child.visits + c * math.sqrt(math.log(self.visits) / child.visits)
+				if score < new_score :
+					score = new_score
+					best_child = child
+			return best_child
+		
+
+
+		
+	def expand(self):
+		self.children = [Node(block, self) for block in make_move(self.block) if block.isValidBlock()]
+
+	def simulate(self, goal):
+		block_ = self.block
+		i = 0
+		while not block_.isGoal():
+			move = [block for block in make_move(block_) if block.isValidBlock()]
+			parent = block_.parent	
+			block_ = random.choice(move)
+			"""
+			block_scores = [(h(block, goal), block) for block in move]
+			min_block = min(block_scores, key=lambda child: child[0])
+			if min_block[1] == parent:
+				block_scores.remove(min_block)
+				try:
+					min_block = min(block_scores, key=lambda child: child[0])
+				except:
+					block_ = block_.parent
+					i -= 1
+
+			parent = block_
+			block_ = min_block[1]
+			"""
+			i += 1
+			#print(block_.previousMove)
+		return  -i
 	
-	def backpropergate(self, score):
-		"""
-        Backpropagates the score of a simulated game to all ancestor nodes.
-		"""
+	def backpropagate(self, score):
 		node = self
 		while node is not None:
 			node.visits += 1
 			node.score += score
 			node = node.parent
-		
-def MonteCarlo(node, max_ite, goal):
+
+
 	
+def MonteCarlo(root, max_ite,goal, examined):
 	for i in range(max_ite):
-		exam_node = node
+		node = root
 
-		while exam_node.children:
-			exam_node = exam_node.select()
+		#selection
+		while not node.children == []:
+			node = node.select()
+
+
+			
+		#expansion
+		if not node.children and not node.block.isGoal():
+			node.expand()
 		
-		exam_node = createNode(exam_node, goal)
-		
-		score = exam_node.simulate()	
 
-		exam_node.backpropergate(score)
+		#simulation
+		score = node.simulate(goal)
 
-	return max(node.children, key= lambda child: child.visits)
+		#backpropagation
+		node.backpropagate(score)
+	best = max(root.children, key=lambda child: child.visits)
+	while best.block in examined:
+		try:
+			root.children.remove(best)
+			best = max(root.children, key=lambda child: child.visits)
+		except:
+			root.parent.children.remove(root)
+			return root.parent
+		#best = max(root.children, key=lambda child: child.visits)
+	return best
 
-
-def solve(block, goal):
-	root = Node(block, None, goal)
+def solve(block,goal):
+	root = Node(block, None)
 	node = root
+	examined = []
+	i = 0
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 100, goal)
+		node = MonteCarlo(node, 10,goal, examined)
+		if node.block not in examined:
+			examined.append(node.block)
+		#print(node.block.previousMove)
 	return node.block

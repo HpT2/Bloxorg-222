@@ -75,7 +75,8 @@ def main():
 	elif algorithm == "MonteCarlo":
 		print("##########Start solving with Monte Carlo algorithm##########")
 		start = timeit.default_timer()
-		finish_node = MonteCarlo.solve(block, goal)
+		finish_node = MonteCarlo.solve(block,goal)
+		#finish_node = MonteCarlo.solve(block)
 		stop = timeit.default_timer()
 
 		print("Time taken: " + str(round(stop - start, 4)) + " s")
@@ -105,9 +106,9 @@ def main():
 		drawGrid(finish_node)
 		drawBlock(finish_node)
 		if algorithm == "MonteCarlo":
-			pygame.time.wait(100)
+			pygame.time.wait(300)
 		else:
-			pygame.time.wait(1000)
+			pygame.timewait(500)
 		if not path:
 			break
 		finish_node = move(finish_node, path.pop(0))

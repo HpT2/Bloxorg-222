@@ -108,7 +108,7 @@ def main():
 		if algorithm == "MonteCarlo":
 			pygame.time.wait(300)
 		else:
-			pygame.timewait(500)
+			pygame.time.wait(500)
 		if not path:
 			break
 		finish_node = move(finish_node, path.pop(0))

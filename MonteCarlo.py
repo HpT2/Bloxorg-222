@@ -11,6 +11,7 @@ def make_move(block):
 
 
 
+
 class Node:
 	def __init__(self, block, parent) -> None:
 		self.block = block
@@ -97,5 +98,5 @@ def solve(block,goal):
 		node = MonteCarlo(node, 10, examined)
 		if node.block not in examined:
 			examined.append(node.block)
-		print(node.block.previousMove)
+		#print(node.block.previousMove)
 	return node.block

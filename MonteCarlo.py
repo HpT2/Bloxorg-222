@@ -30,25 +30,23 @@ class Node:
 				if score < new_score :
 					score = new_score
 					best_child = child
-				return best_child
+			return best_child
 		
 
 
 		
 	def expand(self):
-		self.children = [Node(block, self) for block in make_move(self.block)]
-
+		self.children = [Node(block, self) for block in make_move(self.block) if block.isValidBlock()]
 
 	def simulate(self):
-		block = self.block
-		while not block.isGoal():
-			if not block.isValidBlock():
-				return  -1
-			move = [block for block in make_move(self.block)]
-			block = random.choice(move)
-			#print(block.previousMove)
-		return 1
-
+		block_ = self.block
+		parent = block_
+		i = 0
+		while not block_.isGoal():
+			move = [block for block in make_move(block_) if block.isValidBlock()]
+			block_ = random.choice(move)
+			i += 1
+		return  -i
 	
 	def backpropagate(self, score):
 		node = self
@@ -59,16 +57,13 @@ class Node:
 
 
 	
-def MonteCarlo(root, max_ite):
+def MonteCarlo(root, max_ite, examined):
 	for i in range(max_ite):
 		node = root
 
 		#selection
-		i = 0
 		while not node.children == []:
 			node = node.select()
-			i += 1
-			#print(i)
 
 
 			
@@ -82,14 +77,25 @@ def MonteCarlo(root, max_ite):
 
 		#backpropagation
 		node.backpropagate(score)
-		
-	return min(root.children, key=lambda child:  child.visits)
+	best = max(root.children, key=lambda child: child.visits)
+	while best.block in examined:
+		try:
+			root.children.remove(best)
+			best = max(root.children, key=lambda child: child.visits)
+		except:
+			root.parent.children.remove(root)
+			return root.parent
+		#best = max(root.children, key=lambda child: child.visits)
+	return best
 
 def solve(block,goal):
 	root = Node(block, None)
 	node = root
+	examined = []
+	i = 0
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 10)
-
-		print(node.block.previousMove, node.score)
+		node = MonteCarlo(node, 10, examined)
+		if node.block not in examined:
+			examined.append(node.block)
+		print(node.block.previousMove)
 	return node.block

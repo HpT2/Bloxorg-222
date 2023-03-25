@@ -1,1 +1,0 @@
-def DFS(block): pass

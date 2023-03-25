@@ -38,15 +38,18 @@ class Node:
 		self.children = [Node(block, self) for block in make_move(self.block) if block.isValidBlock()]
 
 	def simulate(self):
-		i = 0
 		queue = []
 		queue.append(self.block)
 		close = []
+		i = 0
 		while queue:
 			x = random.randint(0,len(queue)-1)
 			current = queue.pop(x)
-
+			#print(len(queue))
 			if current.isGoal():
+				while current:
+					i += 1
+					current = current.parent
 				return -i
 
 			if current in close:
@@ -57,7 +60,6 @@ class Node:
 			newBlocks = [block for block in make_move(current) if block.isValidBlock()]
 			for block in newBlocks:
 				queue.append(block)
-			i += 1
 			#print(block_.previousMove)
 	
 	def backpropagate(self, score):
@@ -69,7 +71,7 @@ class Node:
 
 
 	
-def MonteCarlo(root, max_ite, examined):
+def MonteCarlo(root, max_ite):
 	for i in range(max_ite):
 		node = root
 
@@ -84,35 +86,33 @@ def MonteCarlo(root, max_ite, examined):
 		if not node.children and not node.block.isGoal():
 			node.expand()
 		
-
+		#print("Simulattion ",i)
 		#simulation
 		score = node.simulate()
 		#print(score)
+
 		#backpropagation
 		node.backpropagate(score)
-	best = max(root.children, key=lambda child: child.visits)
-
+	best = max(root.children, key=lambda child: child.score / child.visits)
+	"""
 	while best.block in examined:
 		try:
 			root.children.remove(best)
-			best = max(root.children, key=lambda child: child.visits)
+			best = max(root.children, key=lambda child: child.score /  child.visits)
 		except:
-			root.parent.children.remove(root)
-			return root.parent
+			examined.append(root.block)
+			return root.parent, examined
 		#best = max(root.children, key=lambda child: child.visits)
+	"""
 	return best
 
 def solve(block):
 	root = Node(block, None)
 	node = root
-	examined = []
-	i = 0
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 10, examined)
-		if node.block not in examined:
-			examined.append(node.block)
+		node = MonteCarlo(node, 100)
 		
-		#print(node.block.previousMove)
+		print(node.block.previousMove)
 
 
 		#print(node.block.previousMove)

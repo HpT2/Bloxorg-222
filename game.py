@@ -166,17 +166,17 @@ def drawGrid(block):
 			if block.board[int(y/40)][int(x/40)] == 2:
 				pygame.draw.rect(SCREEN, (255,255,0), rect)	
 
-			if block.board[int(y/40)][int(x/40)] in [4,5,6]:
-				pygame.draw.rect(SCREEN, (255,255,0), rect)
+			if block.board[int(y/40)][int(x/40)] == 4:
+				pygame.draw.rect(SCREEN, (123,123,123), rect)
 			'''draw block position'''
 			
-			if block.board[int(y/40)][int(x/40)] in [3,8]:
+			if block.board[int(y/40)][int(x/40)] == 3:
 				pygame.draw.rect(SCREEN, (120,0,25), rect)
 
-			if block.board[int(y/40)][int(x/40)] == 7:
+			if block.board[int(y/40)][int(x/40)] == 5:
 				pygame.draw.rect(SCREEN, (120,250,125), rect)
 
-			if block.board[int(y/40)][int(x/40)] in [0,9]:
+			if block.board[int(y/40)][int(x/40)] in [0,6]:
 				pygame.draw.rect(SCREEN, (0,0,0), rect)
 
 

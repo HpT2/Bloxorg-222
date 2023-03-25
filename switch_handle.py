@@ -20,7 +20,7 @@ def isNumberThree(block,y,x):
 
             numCloseIndex = 2*numToggle + 3
             numClose = switch[numCloseIndex]
-            
+
             for i in range(numClose):    # traverse toggle array
                 bY = switch[numCloseIndex + 2*i +1]
                 bX = switch[numCloseIndex + 2*i + 2]
@@ -28,6 +28,7 @@ def isNumberThree(block,y,x):
                     
             numOpenIndex = numCloseIndex + 2*numClose + 1
             numOpen = switch[numOpenIndex]
+            
             for i in range(numOpen):
                 bY = switch[numOpenIndex + 2*i +1]
                 bX = switch[numOpenIndex + 2*i + 2]

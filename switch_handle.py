@@ -52,8 +52,9 @@ def isNumberFour(block,y,x):
                 else:
                     block.board[bY][bX] = 0
             
-                numCloseIndex = 2*numToggle + 3
-                numClose = switch[numCloseIndex]
+            numCloseIndex = 2*numToggle + 3
+            numClose = switch[numCloseIndex]
+            
             for i in range(numClose):    # traverse toggle array
                 bY = switch[numCloseIndex + 2*i +1]
                 bX = switch[numCloseIndex + 2*i + 2]

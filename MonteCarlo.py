@@ -89,21 +89,23 @@ def MonteCarlo(root, max_ite):
 		#print("Simulattion ",i)
 		#simulation
 		score = node.simulate()
+		if score == None:
+			node.score = float('-inf')
 		#print(score)
-
 		#backpropagation
-		node.backpropagate(score)
+		else:
+			node.backpropagate(score)
+		#print(root.score)
 	best = max(root.children, key=lambda child:  child.visits)
 	return best
 
 def solve(block):
 	root = Node(block, None)
 	node = root
-	i = 1
+
 	while not node.block.isGoal():
 		node = MonteCarlo(node, 20)
 		print(node.block.previousMove)
-		#node.children = []
 
 
 		#print(node.block.previousMove)

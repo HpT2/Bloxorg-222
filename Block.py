@@ -107,7 +107,7 @@ class Block:
 	def isGoal(self):
 		# statements
 		try:
-			if self.rotation == "STANDING" and self.board[self.y][self.x] == 9:
+			if self.rotation == "STANDING" and self.board[self.y][self.x] == 6:
 				return True
 			else:
 				return False
@@ -127,7 +127,6 @@ class Block:
 			if board[y][x] == 0:
 				return False
 			
-			# Case 2: Đo đỏ
 			if rot == "STANDING" and board[y][x] == 2:
 				return False 
 			if rot == "LAYING_Y" and board[y+1][x] == 0:
@@ -141,7 +140,7 @@ class Block:
 			if rot == "STANDING" and board[y][x] == 3:
 				isNumberThree(self,y,x)
 
-			# Case 4: Cục tròn đặc (only đóng).
+			# Case 4: Cục tròn đặc .
 			if board[y][x] == 4:
 				isNumberFour(self,y,x)
 			if rot == "LAYING_X" and board[y][x+1] == 4:
@@ -152,29 +151,9 @@ class Block:
 				isNumberFour(self,y1,x1)
 
 
-			# Case 5: Cục tròn đặc (toggle)
-			if board[y][x] == 5:
+			# Case 5: Phân thân 
+			if rot == "STANDING" and board[y][x] == 5:
 				isNumberFive(self,y,x)
-			if rot == "LAYING_X" and board[y][x+1] == 5:
-				isNumberFive(self,y,x+1)
-			if rot == "LAYING_Y" and board[y+1][x] == 5:
-				isNumberFive(self,y+1,x)
-			if rot == "SPLIT" and board[y1][x1] == 5:
-				isNumberFive(self,y1,x1)
-
-			# Case 6: Cục tròn đặc (only mở)
-			if board[y][x] == 6:
-				isNumberSix(self,y,x)
-			if rot == "LAYING_X" and board[y][x+1] == 6:
-				isNumberSix(self,y,x+1)
-			if rot == "LAYING_Y" and board[y+1][x] == 6:
-				isNumberSix(self,y+1,x)
-			if rot == "SPLIT" and board[y1][x1] == 6:
-				isNumberSix(self,y1,x1)
-
-			# Case 7: Phân thân 
-			if rot == "STANDING" and board[y][x] == 7:
-				isNumberSeven(self,y,x)
 			# Case7_1: MERGE BLOCK
 			if rot == "SPLIT": # check IS_MERGE
 				# case LAYING_X: x first
@@ -194,11 +173,6 @@ class Block:
 				if x == x1 and y == y1 + 1:
 					self.rotation = "LAYING_Y"
 					self.y   = y1
-		
-		# Case 8: Chữ X (only mở)
-			if rot == "STANDING" and board[y][x] == 8:
-				isNumberEight(self,y,x)
-
 			return True
 		except:
 			return False

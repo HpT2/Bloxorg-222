@@ -37,6 +37,12 @@ def main():
 	algorithm = args.algorithm
 	path = []
 	init, goal, num_of_switches, switches = readMap(stage)
+	for i in range(num_of_switches):
+		switch = switches[0]
+		switches.remove(switch)
+		switch = np.fromstring(switch, dtype=int, sep=" ")
+		switches.append(switch)
+	print(switches)
 	map = np.loadtxt(stage,dtype=int,skiprows=3+num_of_switches)
 	block = Block(init[1], init[0], "STANDING", None, map, switches=switches)
 

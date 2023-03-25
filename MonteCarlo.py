@@ -50,7 +50,7 @@ class Node:
 				while current:
 					i += 1
 					current = current.parent
-				return -i
+				return -i*10
 
 			if current in close:
 				continue
@@ -60,7 +60,6 @@ class Node:
 			newBlocks = [block for block in make_move(current) if block.isValidBlock()]
 			for block in newBlocks:
 				queue.append(block)
-			#print(block_.previousMove)
 	
 	def backpropagate(self, score):
 		node = self
@@ -85,6 +84,7 @@ def MonteCarlo(root, max_ite):
 		#expansion
 		if not node.children and not node.block.isGoal():
 			node.expand()
+
 		
 		#print("Simulattion ",i)
 		#simulation
@@ -99,12 +99,11 @@ def MonteCarlo(root, max_ite):
 def solve(block):
 	root = Node(block, None)
 	node = root
-	i = 0
+	i = 1
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 10 + 10*i)
-		i += 1
-		
-		#print(node.block.previousMove)
+		node = MonteCarlo(node, 20)
+		print(node.block.previousMove)
+		#node.children = []
 
 
 		#print(node.block.previousMove)

@@ -42,7 +42,6 @@ def main():
 		switches.remove(switch)
 		switch = np.fromstring(switch, dtype=int, sep=" ")
 		switches.append(switch)
-	print(switches)
 	map = np.loadtxt(stage,dtype=int,skiprows=3+num_of_switches)
 	block = Block(init[1], init[0], "STANDING", None, map, switches=switches)
 

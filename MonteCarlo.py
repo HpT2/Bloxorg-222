@@ -31,6 +31,7 @@ class Node:
 					best_child = child
 			return best_child
 		
+		
 
 
 		
@@ -45,6 +46,9 @@ class Node:
 		while queue:
 			x = random.randint(0,len(queue)-1)
 			current = queue.pop(x)
+			#i+=1
+			#if current.isGoal():
+			#	return -i*10
 			#print(len(queue))
 			if current.isGoal():
 				while current:
@@ -70,17 +74,17 @@ class Node:
 
 
 	
-def MonteCarlo(root, max_ite):
+def MonteCarlo(root, max_ite, examined):
 	for i in range(max_ite):
 		node = root
 
 		#selection
-		while node.children:
+		while node is not None and node.children:
 			node = node.select()
-			#print(node.block.previousMove)
+			#print(node.block.y, node.block.x)
 
-
-			
+		if node == None:
+			continue
 		#expansion
 		if not node.children and not node.block.isGoal():
 			node.expand()
@@ -98,16 +102,29 @@ def MonteCarlo(root, max_ite):
 		#print(score)
 		#print(root.score)
 	best = max(root.children, key=lambda child:  child.visits)
-	return best
+	while root.children:
+		if best.block in examined:
+			root.children.remove(best)
+			if root.children:
+				best = max(root.children, key=lambda child:  child.visits)
+			else:
+				break
+		else:
+			examined.append(best.block)
+			return best, examined
+	examined.append(root.block)
+	root.parent.children.remove(root)
+	return root.parent, examined
 
 def solve(block):
 	root = Node(block, None)
 	node = root
-	i = 0
+	i = 1
+	examined = []
 	while not node.block.isGoal():
-		node = MonteCarlo(node, 10+i)
+		node, examined = MonteCarlo(node, 5, examined)
 		i = i+1
-
-
+		#print(i)
 		#print(node.block.previousMove)
+		#node.children = []
 	return node.block

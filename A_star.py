@@ -17,7 +17,7 @@ class Node:
 	def g(self, parent):
 		if parent == None:
 			return 0
-		return parent.g_val + 10
+		return parent.g_val + 1
 	
 	def __lt__(self, other) -> bool:
 		return self.f_val < other.f_val

@@ -44,8 +44,8 @@ class Node:
 		close = []
 		i = 0
 		while queue:
-			x = random.randint(0,len(queue)-1)
-			current = queue.pop(x)
+			#x = random.randint(0,len(queue)-1)
+			current = queue.pop(0)
 			#i+=1
 			#if current.isGoal():
 			#	return -i*10
@@ -122,7 +122,7 @@ def solve(block):
 	#i = 1
 	examined = []
 	while not node.block.isGoal():
-		node, examined = MonteCarlo(node, 5, examined)
+		node, examined = MonteCarlo(node, 10, examined)
 		#i = i+1
 		#print(i)
 		#print(node.block.previousMove)

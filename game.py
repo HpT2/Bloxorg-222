@@ -124,12 +124,16 @@ def main():
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					pause = True
+				if event.type == pygame.QUIT:
+					pygame.quit()
 
 			pygame.display.update()
 		else:
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					pause = False
+				if event.type == pygame.QUIT:
+					pygame.quit()
 
 
 def move(block, path):

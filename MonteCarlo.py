@@ -119,11 +119,11 @@ def MonteCarlo(root, max_ite, examined):
 def solve(block):
 	root = Node(block, None)
 	node = root
-	i = 1
+	#i = 1
 	examined = []
 	while not node.block.isGoal():
 		node, examined = MonteCarlo(node, 5, examined)
-		i = i+1
+		#i = i+1
 		#print(i)
 		#print(node.block.previousMove)
 		#node.children = []

@@ -107,23 +107,29 @@ def main():
 	SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 	CLOCK = pygame.time.Clock()
 	SCREEN.fill((0,0,0))
+	pause = False
 	while True:
-		drawGrid(finish_node)
-		drawBlock(finish_node)
-		if algorithm == "MonteCarlo":
-			pygame.time.wait(300)
+		if not pause:
+			drawGrid(finish_node)
+			drawBlock(finish_node)
+			if algorithm == "MonteCarlo":
+				pygame.time.wait(300)
+			else:
+				pygame.time.wait(500)
+			if not path:
+				break
+			finish_node = move(finish_node, path.pop(0))
+
+			finish_node.isValidBlock()
+			for event in pygame.event.get():
+				if event.type == pygame.MOUSEBUTTONDOWN:
+					pause = True
+
+			pygame.display.update()
 		else:
-			pygame.time.wait(500)
-		if not path:
-			break
-		finish_node = move(finish_node, path.pop(0))
-
-		finish_node.isValidBlock()
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-
-		pygame.display.update()
+			for event in pygame.event.get():
+				if event.type == pygame.MOUSEBUTTONDOWN:
+					pause = False
 
 
 def move(block, path):

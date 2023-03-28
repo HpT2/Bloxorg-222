@@ -1,14 +1,4 @@
 # Bloxorg-222
-## Meet 14/3/2023
----------------------------------
-Deadline 1 (21/3/2023)
+------------------------------
+run '''python game.py -stage <stage_number> -algorithm <Astar,BFS,MonteCarlo>''' to run program
 
-A*: Tùng, Tiến
-
-Blind Search: Nam, Viễn
-
-Deadline 2(27/3/2023)
-
-Monte Carlo
-
---------------------------------
